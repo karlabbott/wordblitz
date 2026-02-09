@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <title>WordBlitz</title>
+  <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+  <header>
+    <div class="header-left">
+      <a href="/leaderboard" class="nav-link">Leaderboard</a>
+    </div>
+    <h1 class="game-title">WordBlitz</h1>
+    <div class="header-right">
+      <span id="player-name" class="player-name"></span>
+    </div>
+  </header>
+
+  <!-- Registration Modal -->
+  <div id="registration-modal" class="modal-overlay" style="display:none;">
+    <div class="modal-content">
+      <h2>Welcome to WordBlitz!</h2>
+      <p>Enter your name to start playing</p>
+      <input type="text" id="player-name-input" placeholder="Your name" maxlength="20" autocomplete="off">
+      <button id="register-btn" class="btn-primary">Start Playing</button>
+    </div>
+  </div>
+
+  <!-- Toast container -->
+  <div id="toast-container" class="toast-container"></div>
+
+  <main>
+    <!-- Game Board -->
+    <div id="game-board" class="game-board">
+      <div class="board-row" data-row="0">
+        <div class="tile" data-row="0" data-col="0"></div>
+        <div class="tile" data-row="0" data-col="1"></div>
+        <div class="tile" data-row="0" data-col="2"></div>
+        <div class="tile" data-row="0" data-col="3"></div>
+        <div class="tile" data-row="0" data-col="4"></div>
+      </div>
+      <div class="board-row" data-row="1">
+        <div class="tile" data-row="1" data-col="0"></div>
+        <div class="tile" data-row="1" data-col="1"></div>
+        <div class="tile" data-row="1" data-col="2"></div>
+        <div class="tile" data-row="1" data-col="3"></div>
+        <div class="tile" data-row="1" data-col="4"></div>
+      </div>
+      <div class="board-row" data-row="2">
+        <div class="tile" data-row="2" data-col="0"></div>
+        <div class="tile" data-row="2" data-col="1"></div>
+        <div class="tile" data-row="2" data-col="2"></div>
+        <div class="tile" data-row="2" data-col="3"></div>
+        <div class="tile" data-row="2" data-col="4"></div>
+      </div>
+      <div class="board-row" data-row="3">
+        <div class="tile" data-row="3" data-col="0"></div>
+        <div class="tile" data-row="3" data-col="1"></div>
+        <div class="tile" data-row="3" data-col="2"></div>
+        <div class="tile" data-row="3" data-col="3"></div>
+        <div class="tile" data-row="3" data-col="4"></div>
+      </div>
+      <div class="board-row" data-row="4">
+        <div class="tile" data-row="4" data-col="0"></div>
+        <div class="tile" data-row="4" data-col="1"></div>
+        <div class="tile" data-row="4" data-col="2"></div>
+        <div class="tile" data-row="4" data-col="3"></div>
+        <div class="tile" data-row="4" data-col="4"></div>
+      </div>
+      <div class="board-row" data-row="5">
+        <div class="tile" data-row="5" data-col="0"></div>
+        <div class="tile" data-row="5" data-col="1"></div>
+        <div class="tile" data-row="5" data-col="2"></div>
+        <div class="tile" data-row="5" data-col="3"></div>
+        <div class="tile" data-row="5" data-col="4"></div>
+      </div>
+    </div>
+
+    <!-- Message / New Word area -->
+    <div id="message-area" class="message-area">
+      <button id="new-word-btn" class="btn-primary new-word-btn" style="display:none;">New Word</button>
+    </div>
+
+    <!-- On-screen Keyboard -->
+    <div id="keyboard" class="keyboard">
+      <div class="keyboard-row">
+        <button class="key" data-key="Q">Q</button>
+        <button class="key" data-key="W">W</button>
+        <button class="key" data-key="E">E</button>
+        <button class="key" data-key="R">R</button>
+        <button class="key" data-key="T">T</button>
+        <button class="key" data-key="Y">Y</button>
+        <button class="key" data-key="U">U</button>
+        <button class="key" data-key="I">I</button>
+        <button class="key" data-key="O">O</button>
+        <button class="key" data-key="P">P</button>
+      </div>
+      <div class="keyboard-row">
+        <div class="spacer-half"></div>
+        <button class="key" data-key="A">A</button>
+        <button class="key" data-key="S">S</button>
+        <button class="key" data-key="D">D</button>
+        <button class="key" data-key="F">F</button>
+        <button class="key" data-key="G">G</button>
+        <button class="key" data-key="H">H</button>
+        <button class="key" data-key="J">J</button>
+        <button class="key" data-key="K">K</button>
+        <button class="key" data-key="L">L</button>
+        <div class="spacer-half"></div>
+      </div>
+      <div class="keyboard-row">
+        <button class="key key-wide" data-key="ENTER">ENTER</button>
+        <button class="key" data-key="Z">Z</button>
+        <button class="key" data-key="X">X</button>
+        <button class="key" data-key="C">C</button>
+        <button class="key" data-key="V">V</button>
+        <button class="key" data-key="B">B</button>
+        <button class="key" data-key="N">N</button>
+        <button class="key" data-key="M">M</button>
+        <button class="key key-wide" data-key="BACKSPACE">⌫</button>
+      </div>
+    </div>
+  </main>
+
+  <script src="/static/js/game.js"></script>
+</body>
+</html>

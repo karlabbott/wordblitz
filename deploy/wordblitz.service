@@ -1,0 +1,25 @@
+[Unit]
+Description=WordBlitz Gunicorn Application Server
+After=network.target postgresql.service
+Wants=postgresql.service
+
+[Service]
+Type=notify
+User=www-data
+Group=www-data
+WorkingDirectory=/opt/wordblitz
+EnvironmentFile=/opt/wordblitz/.env
+ExecStart=/opt/wordblitz/venv/bin/gunicorn \
+    --workers ${GUNICORN_WORKERS:-3} \
+    --bind ${GUNICORN_BIND:-127.0.0.1:5000} \
+    --access-logfile /var/log/wordblitz/access.log \
+    --error-logfile /var/log/wordblitz/error.log \
+    wsgi:app
+ExecReload=/bin/kill -s HUP $MAINPID
+Restart=on-failure
+RestartSec=5
+KillMode=mixed
+TimeoutStopSec=10
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <title>WordBlitz - Leaderboard</title>
+  <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body class="leaderboard-page">
+  <header>
+    <div class="header-left">
+      <a href="/" class="nav-link">← Back to Game</a>
+    </div>
+    <h1 class="game-title">WordBlitz Leaderboard</h1>
+    <div class="header-right">
+      <span id="player-name" class="player-name"></span>
+    </div>
+  </header>
+
+  <main class="leaderboard-main">
+    <div class="leaderboard-grid">
+      <!-- Champions Section -->
+      <section class="leaderboard-section">
+        <h2 class="section-title">🏆 Champions</h2>
+        <p class="section-subtitle">Best average guesses (min 5 games)</p>
+        <div class="table-wrapper">
+          <table id="champions-table" class="leaderboard-table">
+            <thead>
+              <tr>
+                <th>Rank</th>
+                <th>Name</th>
+                <th>Avg Guesses</th>
+                <th>Games Won</th>
+              </tr>
+            </thead>
+            <tbody id="champions-body">
+              <tr><td colspan="4" class="empty-message">Loading...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- Most Prolific Section -->
+      <section class="leaderboard-section">
+        <h2 class="section-title">⚡ Most Prolific</h2>
+        <p class="section-subtitle">Most words solved</p>
+        <div class="table-wrapper">
+          <table id="prolific-table" class="leaderboard-table">
+            <thead>
+              <tr>
+                <th>Rank</th>
+                <th>Name</th>
+                <th>Games Won</th>
+                <th>Win Rate</th>
+              </tr>
+            </thead>
+            <tbody id="prolific-body">
+              <tr><td colspan="4" class="empty-message">Loading...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+    </div>
+
+    <!-- Personal Stats -->
+    <section class="personal-stats-section">
+      <h2 class="section-title">📊 Your Stats</h2>
+      <div id="personal-stats" class="personal-stats">
+        <div class="stat-card">
+          <div class="stat-value" id="stat-played">-</div>
+          <div class="stat-label">Played</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value" id="stat-won">-</div>
+          <div class="stat-label">Won</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value" id="stat-win-rate">-</div>
+          <div class="stat-label">Win %</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value" id="stat-avg-guesses">-</div>
+          <div class="stat-label">Avg Guesses</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value" id="stat-streak">-</div>
+          <div class="stat-label">Streak</div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="/static/js/leaderboard.js"></script>
+</body>
+</html>
