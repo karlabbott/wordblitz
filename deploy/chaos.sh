@@ -1,7 +1,7 @@
 #!/bin/bash
 # Chaos script: Spawns expensive cross-join queries against the wordblitz DB
 # This will peg CPU on the DB VM and starve the app of database resources
-# Run: ssh azureuser@20.42.41.31 "bash /tmp/chaos.sh"
+# Run: ssh azureuser@linuxbox "bash /tmp/chaos.sh"
 # Stop: The queries can be found and killed via pg_stat_activity
 
 for i in $(seq 1 100); do
