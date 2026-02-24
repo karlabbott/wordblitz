@@ -119,6 +119,10 @@ echo ">>> Setting up certificate auto-renewal..."
 systemctl enable certbot.timer 2>/dev/null || \
     (crontab -l 2>/dev/null; echo "0 3 * * * certbot renew --quiet --post-hook 'systemctl reload nginx'") | crontab -
 
+# --- Chaos testing script ---
+echo ">>> Installing chaos testing script..."
+install -m 755 deploy/chaos.sh /usr/local/bin/chaos.sh
+
 # --- Systemd service ---
 echo ">>> Setting up Gunicorn service..."
 cp deploy/wordblitz.service /etc/systemd/system/wordblitz.service
