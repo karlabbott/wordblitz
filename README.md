@@ -91,7 +91,7 @@ Open http://localhost:5000 in your browser.
 ## Production Deployment
 
 ### Prerequisites
-- Ubuntu 22.04+ server
+- Ubuntu 22.04+ or RHEL 9/10 server
 - Domain name pointing to your server's IP
 - Root access
 
