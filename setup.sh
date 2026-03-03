@@ -213,9 +213,14 @@ echo ">>> Setting up certificate auto-renewal..."
 systemctl enable certbot.timer 2>/dev/null || \
     (crontab -l 2>/dev/null; echo "0 3 * * * $CERTBOT_CMD renew --quiet --post-hook 'systemctl reload nginx'") | crontab -
 
-# --- Chaos testing script ---
-echo ">>> Installing chaos testing script..."
-install -m 755 deploy/chaos.sh /usr/local/bin/chaos.sh
+# --- Chaos testing script (install on DB VM where psql and postgres user exist) ---
+echo ">>> Installing chaos testing script on DB VM..."
+if [ -n "${DB_VM_HOST:-}" ] && [ "$DB_VM_HOST" != "localhost" ] && [ "$DB_VM_HOST" != "127.0.0.1" ]; then
+    scp deploy/chaos.sh "${SSH_USER:-azureuser}@${DB_VM_HOST}:/tmp/chaos.sh"
+    ssh "${SSH_USER:-azureuser}@${DB_VM_HOST}" "sudo install -m 755 /tmp/chaos.sh /usr/local/bin/chaos.sh && rm /tmp/chaos.sh"
+else
+    install -m 755 deploy/chaos.sh /usr/local/bin/chaos.sh
+fi
 
 # --- Systemd service ---
 echo ">>> Setting up Gunicorn service..."
