@@ -1,18 +1,30 @@
 # WordBlitz 🎯
 
-A Wordle-style word guessing game with unlimited plays, a leaderboard, and persistent player tracking.
+A Wordle-style word guessing game built for conference demos — featuring **race mode** where all players solve the same word on a 5-minute timer, a leaderboard, confetti celebrations, and persistent player tracking.
 
 ![Game Screenshot](https://img.shields.io/badge/game-WordBlitz-538d4e?style=for-the-badge)
 
 ## Features
 
+- **🏁 Race Mode (default)** — Every 5 minutes a new word is chosen and all players race to solve it. A countdown timer ticks down and the game auto-ends when time runs out.
+- **🎉 Confetti on Win** — Celebratory particle burst animation when you solve the word
+- **🎲 Random Mode** — Play random words between race rounds to stay sharp
+- **📊 Race Leaderboard** — Per-round results showing who solved each word fastest with the fewest guesses
 - **Classic Wordle gameplay** — Guess a 5-letter word in 6 tries with green/yellow/gray feedback
-- **Unlimited plays** — Once you guess a word, immediately start another
-- **Player recognition** — Identified by IP + browser fingerprint, so you can leave and come back
-- **Leaderboard** — See who has the best average guesses and who has solved the most words
+- **Player recognition** — 12-hour session cookie so you can leave and come back (survives WiFi IP changes)
+- **Overall Leaderboard** — See who has the best average guesses and who has solved the most words
 - **Mobile-friendly** — Responsive design with on-screen keyboard
 - **SSL/HTTPS** — Production deployment with Let's Encrypt certificates
 - **5,000 word dictionary** — Curated list of common 5-letter English words
+
+## How Race Mode Works
+
+1. A new word is selected every 5 minutes (configurable via `RACE_ROUND_SECONDS`)
+2. All players who start a game during that window get the **same word**
+3. A countdown timer shows how much time remains
+4. If time runs out, the game ends automatically (counted as a loss)
+5. After the round, the race leaderboard shows who solved it and how quickly
+6. Between rounds, you can play random words to keep playing
 
 ## Architecture
 
@@ -114,6 +126,7 @@ Edit these values:
 - `SECRET_KEY` — A random secret key (generate with `python3 -c "import secrets; print(secrets.token_hex(32))"`)
 - `DB_PASSWORD` — A strong database password
 - `LETSENCRYPT_EMAIL` — Your email for certificate expiry notifications
+- `RACE_ROUND_SECONDS` — (Optional) Seconds per race round, default `300` (5 minutes)
 
 ### 3. Run setup
 
@@ -141,22 +154,25 @@ Visit `https://your-hostname` — you should see the WordBlitz game.
 | GET | `/leaderboard` | Leaderboard page |
 | POST | `/api/register` | Register player name |
 | GET | `/api/me` | Get current player info |
-| POST | `/api/game/new` | Start a new game |
+| POST | `/api/game/new` | Start a new game (`mode`: `race` or `random`) |
 | GET | `/api/game/current` | Get current game state |
 | POST | `/api/game/guess` | Submit a guess |
-| GET | `/api/leaderboard` | Get leaderboard data |
+| GET | `/api/race/status` | Current race round info + seconds remaining |
+| GET | `/api/race/leaderboard` | Per-round race results (query: `?rounds=N`) |
+| GET | `/api/leaderboard` | Get overall leaderboard data |
 | GET | `/api/stats` | Get personal stats |
 
 ## Game Rules
 
 1. You have 6 attempts to guess the 5-letter word
-2. After each guess, letters are color-coded:
+2. In **race mode**, everyone gets the same word and you have 5 minutes to solve it
+3. After each guess, letters are color-coded:
    - 🟩 **Green** — Correct letter in the correct position
    - 🟨 **Yellow** — Correct letter in the wrong position
    - ⬛ **Gray** — Letter is not in the word
-3. Duplicate letters are handled correctly (excess duplicates show as gray)
-4. After winning or losing, click "New Word" to play again
-5. Your progress is saved — leave and come back anytime
+4. Duplicate letters are handled correctly (excess duplicates show as gray)
+5. After winning, enjoy the confetti! 🎉 Then wait for the next race round or play a random word
+6. Your progress is saved via a 12-hour session cookie — leave and come back anytime
 
 ## Management
 
