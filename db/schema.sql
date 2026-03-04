@@ -22,21 +22,38 @@ CREATE TABLE IF NOT EXISTS players (
 
 CREATE INDEX IF NOT EXISTS idx_players_fingerprint ON players (fingerprint);
 
--- Each game assigns one target word to a player.
--- Status tracks whether the game is still in progress, won, or lost.
-CREATE TABLE IF NOT EXISTS games (
+-- Race rounds: every N seconds a new word is chosen for all players.
+-- round_number is deterministic: floor(epoch / round_seconds).
+CREATE TABLE IF NOT EXISTS race_rounds (
     id           SERIAL PRIMARY KEY,
-    player_id    INTEGER     NOT NULL REFERENCES players(id),
-    word_id      INTEGER     NOT NULL REFERENCES words(id),
-    status       VARCHAR(20) NOT NULL DEFAULT 'active'
-                     CHECK (status IN ('active', 'won', 'lost')),
-    num_guesses  INTEGER     NOT NULL DEFAULT 0,
-    created_at   TIMESTAMP   NOT NULL DEFAULT NOW(),
-    completed_at TIMESTAMP
+    round_number BIGINT    NOT NULL UNIQUE,
+    word_id      INTEGER   NOT NULL REFERENCES words(id),
+    started_at   TIMESTAMP NOT NULL,
+    ends_at      TIMESTAMP NOT NULL
 );
 
-CREATE INDEX IF NOT EXISTS idx_games_player_id ON games (player_id);
-CREATE INDEX IF NOT EXISTS idx_games_status    ON games (status);
+CREATE INDEX IF NOT EXISTS idx_race_rounds_number ON race_rounds (round_number);
+
+-- Each game assigns one target word to a player.
+-- Status tracks whether the game is still in progress, won, or lost.
+-- mode: 'race' (default) or 'random' (freeplay while waiting).
+CREATE TABLE IF NOT EXISTS games (
+    id             SERIAL PRIMARY KEY,
+    player_id      INTEGER     NOT NULL REFERENCES players(id),
+    word_id        INTEGER     NOT NULL REFERENCES words(id),
+    race_round_id  INTEGER     REFERENCES race_rounds(id),
+    mode           VARCHAR(10) NOT NULL DEFAULT 'race'
+                       CHECK (mode IN ('race', 'random')),
+    status         VARCHAR(20) NOT NULL DEFAULT 'active'
+                       CHECK (status IN ('active', 'won', 'lost')),
+    num_guesses    INTEGER     NOT NULL DEFAULT 0,
+    created_at     TIMESTAMP   NOT NULL DEFAULT NOW(),
+    completed_at   TIMESTAMP
+);
+
+CREATE INDEX IF NOT EXISTS idx_games_player_id    ON games (player_id);
+CREATE INDEX IF NOT EXISTS idx_games_status        ON games (status);
+CREATE INDEX IF NOT EXISTS idx_games_race_round_id ON games (race_round_id);
 
 -- Individual guesses within a game (max 6 per game).
 -- result is a JSONB array of objects: [{letter, status}]
@@ -127,5 +144,24 @@ LEFT JOIN current cur   ON cur.player_id = p.id
 LEFT JOIN best b        ON b.player_id   = p.id
 GROUP BY p.id, p.name, cur.current_streak, b.best_streak
 ORDER BY games_won DESC, avg_guesses_per_win ASC;
+
+-- Race round leaderboard: per-round results sorted by fewest guesses then fastest time.
+CREATE OR REPLACE VIEW race_round_results AS
+SELECT
+    rr.id           AS round_id,
+    rr.round_number,
+    rr.started_at,
+    rr.ends_at,
+    w.word          AS round_word,
+    p.name          AS player_name,
+    g.status,
+    g.num_guesses,
+    g.completed_at,
+    g.completed_at - g.created_at AS solve_duration
+FROM race_rounds rr
+JOIN words w  ON w.id  = rr.word_id
+JOIN games g  ON g.race_round_id = rr.id AND g.status IN ('won', 'lost')
+JOIN players p ON p.id = g.player_id
+ORDER BY rr.round_number DESC, g.status ASC, g.num_guesses ASC, solve_duration ASC;
 
 COMMIT;

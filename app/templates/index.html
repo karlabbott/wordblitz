@@ -17,6 +17,17 @@
     </div>
   </header>
 
+  <!-- Race Timer Bar -->
+  <div id="race-bar" class="race-bar" style="display:none;">
+    <div class="race-bar-inner">
+      <span id="race-label" class="race-label">⏱️ Race Round</span>
+      <span id="race-timer" class="race-timer">5:00</span>
+    </div>
+    <div class="race-progress-track">
+      <div id="race-progress" class="race-progress"></div>
+    </div>
+  </div>
+
   <!-- Registration Modal -->
   <div id="registration-modal" class="modal-overlay" style="display:none;">
     <div class="modal-content">
@@ -80,7 +91,12 @@
     <!-- Message / New Word area -->
     <div id="message-area" class="message-area">
       <button id="new-word-btn" class="btn-primary new-word-btn" style="display:none;">New Word</button>
+      <button id="play-random-btn" class="btn-secondary play-random-btn" style="display:none;">Play Random Word</button>
+      <div id="next-round-msg" class="next-round-msg" style="display:none;"></div>
     </div>
+
+    <!-- Confetti Canvas -->
+    <canvas id="confetti-canvas" class="confetti-canvas"></canvas>
 
     <!-- On-screen Keyboard -->
     <div id="keyboard" class="keyboard">

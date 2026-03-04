@@ -8,3 +8,4 @@ class Config:
         'postgresql://wordblitz:wordblitz@localhost:5432/wordblitz',
     )
     HOSTNAME = os.environ.get('HOSTNAME', 'localhost')
+    RACE_ROUND_SECONDS = int(os.environ.get('RACE_ROUND_SECONDS', '300'))
